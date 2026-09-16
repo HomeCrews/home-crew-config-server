@@ -19,6 +19,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # homecrew:standards:ci-secret-scan:start
+      - name: Scan for secrets
+        run: |
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest \
+            detect --source /repo --no-git --redact --no-banner
+      # homecrew:standards:ci-secret-scan:end
+
       - name: Set up Java 25
         uses: actions/setup-java@v4
         with:

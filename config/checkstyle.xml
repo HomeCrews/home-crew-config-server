@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+  HomeCrew Checkstyle ruleset.
+
+  Scope: semantics and conventions ONLY. Spotless + google-java-format (AOSP)
+  owns all whitespace, wrapping, brace placement and import ordering, so every
+  purely cosmetic check is deliberately absent. Adding one back will produce
+  violations that `./mvnw spotless:apply` cannot fix, deadlocking the build.
+
+  Suppress a specific finding with @SuppressWarnings("checkstyle:CheckName")
+  or add a rule to config/checkstyle-suppressions.xml.
+-->
+<module name="Checker">
+    <property name="severity" value="error"/>
+    <!--
+      Java only. Scanning .properties files produces phantom FileTabCharacter
+      violations on lines with no tab in them - a trap the the reference project project
+      hit and worked around with includeResources=false. Both guards are set.
+    -->
+    <property name="fileExtensions" value="java"/>
+    <property name="charset" value="UTF-8"/>
+
+    <!-- Optional: absent by default; create the file only if you need it. -->
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/checkstyle-suppressions.xml"/>
+        <property name="optional" value="true"/>
+    </module>
+
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
+    <module name="NewlineAtEndOfFile"/>
+
+    <module name="LineLength">
+        <!-- Matches google-java-format AOSP. -->
+        <property name="max" value="100"/>
+        <property name="ignorePattern"
+                  value="^package.*|^import.*|^\s*\*.*https?://|@see\s"/>
+    </module>
+
+    <module name="TreeWalker">
+
+        <!-- Enables @SuppressWarnings("checkstyle:...") -->
+        <module name="SuppressWarningsHolder"/>
+
+        <!-- ===== Imports ===== -->
+        <module name="UnusedImports">
+            <property name="processJavadoc" value="true"/>
+        </module>
+        <module name="RedundantImport"/>
+        <module name="AvoidStarImport"/>
+        <module name="IllegalImport">
+            <!-- sun.* is unsupported; jUnit 3/4 asserts on a JUnit 5 codebase. -->
+            <property name="illegalPkgs" value="sun, junit.framework"/>
+        </module>
+
+        <!-- ===== Naming ===== -->
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+        </module>
+        <module name="TypeName"/>
+        <module name="MethodName"/>
+        <module name="MemberName"/>
+        <module name="ParameterName"/>
+        <module name="LocalVariableName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="CatchParameterName"/>
+        <module name="LambdaParameterName"/>
+        <module name="ConstantName"/>
+        <module name="StaticVariableName"/>
+        <module name="ClassTypeParameterName"/>
+        <module name="MethodTypeParameterName"/>
+        <module name="RecordComponentName"/>
+        <module name="PatternVariableName"/>
+
+        <!-- ===== Modifiers ===== -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <!-- ===== Correctness ===== -->
+        <module name="EqualsHashCode"/>
+        <module name="CovariantEquals"/>
+        <module name="StringLiteralEquality"/>
+        <module name="NoFinalizer"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="FallThrough"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="DefaultComesLast"/>
+        <module name="OneStatementPerLine"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="EmptyStatement"/>
+        <module name="UnnecessaryParentheses"/>
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="UpperEll"/>
+        <module name="NeedBraces"/>
+        <module name="MissingOverride"/>
+
+        <!-- Swallowing an exception silently is how incidents get lost. -->
+        <module name="EmptyCatchBlock">
+            <property name="exceptionVariableName" value="expected|ignored"/>
+        </module>
+        <module name="EmptyBlock">
+            <property name="option" value="TEXT"/>
+            <property name="tokens"
+                      value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE,
+                             LITERAL_SWITCH, LITERAL_DO, LITERAL_WHILE, LITERAL_FOR,
+                             INSTANCE_INIT, STATIC_INIT"/>
+        </module>
+
+        <!-- Catching Throwable/Error hides JVM failures; RuntimeException hides bugs. -->
+        <module name="IllegalCatch">
+            <property name="illegalClassNames"
+                      value="java.lang.Error, java.lang.Throwable"/>
+        </module>
+        <module name="IllegalThrows"/>
+
+        <!-- ===== Design ===== -->
+        <module name="FinalClass"/>
+        <module name="InterfaceIsType"/>
+        <module name="OuterTypeFilename"/>
+        <module name="OneTopLevelClass"/>
+
+    </module>
+</module>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  HomeCrew SpotBugs exclusions.
+
+  Each entry suppresses a pattern that fires on idiomatic Spring / JPA / Lombok
+  code and cannot be fixed without making the code worse. Anything not listed
+  here is a real finding and blocks the build.
+-->
+<FindBugsFilter>
+
+    <!-- Lombok-generated accessors, builders and equals/hashCode.
+         Requires lombok.addLombokGeneratedAnnotation = true in lombok.config. -->
+    <Match>
+        <Class name="~.*"/>
+        <Or>
+            <Method name="~equals|hashCode|toString|builder|toBuilder"/>
+        </Or>
+        <Bug pattern="EQ_UNUSUAL,NP_METHOD_PARAMETER_TIGHTENS_ANNOTATION"/>
+    </Match>
+
+    <!-- Getters/setters on entities and DTOs return or store mutable references
+         (List, Date, arrays) by design; JPA requires it and defensive copying
+         would break dirty-checking. These two patterns fire on essentially every
+         Lombok @Data class. -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Spring injects into non-transient fields of @Entity classes; SpotBugs
+         cannot see that these are never actually serialized. -->
+    <Match>
+        <Bug pattern="SE_BAD_FIELD,SE_NO_SERIALVERSIONID"/>
+    </Match>
+
+    <!-- @Autowired / @Value fields are written by the container, not the class. -->
+    <Match>
+        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR,NP_UNWRITTEN_FIELD,URF_UNREAD_FIELD"/>
+    </Match>
+
+    <!-- Test sources: assertions and fixtures trip a lot of style patterns. -->
+    <Match>
+        <Source name="~.*[\\/]src[\\/]test[\\/].*"/>
+    </Match>
+
+    <!-- Spring Boot application entry points. -->
+    <Match>
+        <Class name="~.*Application"/>
+        <Bug pattern="DM_EXIT,UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+
+</FindBugsFilter>
