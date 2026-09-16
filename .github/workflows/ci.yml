@@ -23,7 +23,7 @@ jobs:
       - name: Scan for secrets
         run: |
           docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest \
-            detect --source /repo --no-git --redact --no-banner
+            dir /repo --redact --no-banner --log-level error
       # homecrew:standards:ci-secret-scan:end
 
       - name: Set up Java 25

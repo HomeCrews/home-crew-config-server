@@ -58,7 +58,7 @@
     <jacoco.version>0.8.14</jacoco.version>
     <exec-maven-plugin.version>3.5.1</exec-maven-plugin.version>
 
-    <!-- Set true on a host with no POSIX shell to skip git hook installation. -->
+    <!-- Set true to skip pointing git at .githooks during the build. -->
     <hooks.install.skip>false</hooks.install.skip>
 
     <!--
@@ -108,10 +108,13 @@
       <!-- homecrew:standards:plugins:start -->
 
       <!--
-        Installs .githooks as core.hooksPath at the start of every build, so a
-        fresh clone is protected without anyone remembering a setup step.
-        install.sh is a no-op outside a git work tree (Docker, CI archives).
-        Set -Dhooks.install.skip=true on a host without a POSIX shell.
+        Points git at .githooks at the start of every build, so a fresh clone
+        is protected without anyone remembering a setup step.
+
+        Invokes git directly rather than a shell script: `sh` is not reliably
+        on PATH on Windows outside Git Bash, whereas git necessarily is if you
+        are building from a clone. Exit 128 (not a git work tree - a source
+        tarball, say) is treated as success so it can never fail a build.
       -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -126,10 +129,17 @@
             </goals>
             <configuration>
               <skip>${hooks.install.skip}</skip>
-              <executable>sh</executable>
+              <executable>git</executable>
+              <workingDirectory>${project.basedir}</workingDirectory>
               <arguments>
-                <argument>${project.basedir}/.githooks/install.sh</argument>
+                <argument>config</argument>
+                <argument>core.hooksPath</argument>
+                <argument>.githooks</argument>
               </arguments>
+              <successCodes>
+                <successCode>0</successCode>
+                <successCode>128</successCode>
+              </successCodes>
             </configuration>
           </execution>
         </executions>
