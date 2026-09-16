@@ -24,11 +24,26 @@
     <property name="fileExtensions" value="java"/>
     <property name="charset" value="UTF-8"/>
 
-    <!-- Optional: absent by default; create the file only if you need it. -->
+    <!--
+      Suppressions live in config/checkstyle-suppressions.xml, wired in by the
+      plugin's <suppressionsLocation>. It sets the checkstyle.suppressions.file
+      property; referencing ${config_loc} instead does NOT work here, because
+      the plugin never populates it and Checkstyle fails to parse the config
+      entirely ("Property ${config_loc} has not been set").
+    -->
     <module name="SuppressionFilter">
-        <property name="file" value="${config_loc}/checkstyle-suppressions.xml"/>
+        <property name="file" value="${checkstyle.suppressions.file}"
+                  default="config/checkstyle-suppressions.xml"/>
         <property name="optional" value="true"/>
     </module>
+
+    <!--
+      Enables @SuppressWarnings("checkstyle:RuleName") in source. This filter
+      is the half that actually suppresses; SuppressWarningsHolder inside
+      TreeWalker below is the half that collects. Both are required - one
+      without the other silently does nothing.
+    -->
+    <module name="SuppressWarningsFilter"/>
 
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
