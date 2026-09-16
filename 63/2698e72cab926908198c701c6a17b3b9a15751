@@ -1,0 +1,21 @@
+src/main/java/com/homecrew/configserver/ConfigserverApplication.java
+  s_3d9bbfd7b8519e::t_deb4653e97ee1b 11-13
+src/test/java/com/homecrew/configserver/ConfigserverApplicationTests.java
+  s_3d9bbfd7b8519e::t_a8cc876fa6a0a3 9-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "632698e72cab926908198c701c6a17b3b9a15751",
+  "prompts": {},
+  "sessions": {
+    "s_3d9bbfd7b8519e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56713074-cac4-4411-b930-44405690d84c",
+        "model": "anthropic.claude-opus-5"
+      },
+      "human_author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
