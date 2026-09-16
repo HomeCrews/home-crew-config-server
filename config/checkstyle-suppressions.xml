@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<!--
+  Checkstyle suppressions.
+
+  Prefer the narrowest tool for the job, in this order:
+    1. @SuppressWarnings("checkstyle:RuleName") on the specific member
+    2. a <suppress> entry here scoped to one file and one check
+    3. removing the rule from config/checkstyle.xml entirely
+
+  A blanket suppression that hides a whole rule across the codebase is the
+  same as not having the rule, but harder to notice.
+-->
+<suppressions>
+
+    <!-- Generated sources are not ours to style. -->
+    <suppress files="[\\/]target[\\/]" checks=".*"/>
+    <suppress files="[\\/]generated-sources[\\/]" checks=".*"/>
+
+    <!--
+      Tests legitimately use long descriptive method names and, in Spring
+      slice tests, package-private fields the container writes to.
+    -->
+    <suppress files="[\\/]src[\\/]test[\\/]" checks="MethodName"/>
+
+</suppressions>

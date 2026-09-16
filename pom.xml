@@ -111,6 +111,12 @@
         Points git at .githooks at the start of every build, so a fresh clone
         is protected without anyone remembering a setup step.
 
+        Bound to validate, not initialize: validate is the FIRST lifecycle
+        phase, and initialize comes after it. Bound to initialize, a plain
+        `mvn validate` would finish without ever installing the hooks - which
+        is exactly the command someone runs to set a repo up. This plugin is
+        declared before Spotless so it wins the same-phase ordering.
+
         Invokes git directly rather than a shell script: `sh` is not reliably
         on PATH on Windows outside Git Bash, whereas git necessarily is if you
         are building from a clone. Exit 128 (not a git work tree - a source
@@ -123,7 +129,7 @@
         <executions>
           <execution>
             <id>install-git-hooks</id>
-            <phase>initialize</phase>
+            <phase>validate</phase>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -203,6 +209,9 @@
         </dependencies>
         <configuration>
           <configLocation>config/checkstyle.xml</configLocation>
+          <!-- Sets the checkstyle.suppressions.file property the
+               SuppressionFilter in checkstyle.xml reads. -->
+          <suppressionsLocation>config/checkstyle-suppressions.xml</suppressionsLocation>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <!-- See the note in config/checkstyle.xml: scanning resources
                produces phantom tab violations in .properties files. -->
