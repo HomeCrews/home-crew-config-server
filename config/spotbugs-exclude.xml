@@ -40,7 +40,23 @@
         <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR,NP_UNWRITTEN_FIELD,URF_UNREAD_FIELD"/>
     </Match>
 
-    <!-- Test sources: assertions and fixtures trip a lot of style patterns. -->
+    <!--
+      Spring Security bean methods are forced to declare `throws Exception`:
+      HttpSecurity.build() inherits it from AbstractConfiguredSecurityBuilder,
+      so a SecurityFilterChain @Bean cannot narrow it. Wrapping the call in a
+      try/catch purely to satisfy the detector would make the code worse.
+
+      Scoped to .config. packages and to this one pattern, so a genuinely
+      over-broad `throws Exception` elsewhere in the codebase still blocks.
+      The sibling patterns THROWS_METHOD_THROWS_CLAUSE_THROWABLE and
+      THROWS_METHOD_THROWS_RUNTIMEEXCEPTION are deliberately NOT excluded.
+    -->
+    <Match>
+        <Class name="~.*\.config\..*"/>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+    </Match>
+
+    <!-- Tests: assertions and fixtures trip a lot of style patterns. -->
     <Match>
         <Source name="~.*[\\/]src[\\/]test[\\/].*"/>
     </Match>
