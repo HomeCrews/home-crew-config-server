@@ -1,54 +1,73 @@
-<!-- Base branch should be `dev`. Delete any section that does not
-     apply - an empty heading is noise. -->
+<!-- Base branch should be `dev`.
 
-## What changed
+     What changed and why belongs in the linked issue, not here. This
+     template is the evidence that the change is ready to merge, not a
+     description of it.
 
-<!-- One paragraph. The diff is below; do not narrate it. Say what this makes
-     possible, or what it stops happening. -->
+     If it is not ready, convert it to a draft - "Convert to draft" in the
+     Reviewers section of the Conversation tab. -->
 
-## Why
+Closes #
 
-<!-- Closes #123. If there is no issue, say what broke or what was missing. -->
+## AppConfig changes
 
-## Build output
+<!-- Config changes, or "No application property changes".
 
-<!-- The tail of the gate, with the real numbers. This is not proof that it
-     ran - the pre-push hook would have blocked you otherwise - it is so the
-     reviewer can see coverage and test counts without checking out. -->
+     Three places a value can live, and picking the wrong one is the usual
+     mistake:
 
-Built locally on this branch with unit and integration tests enabled:
+       src/main/resources/application.properties   this service only
+       application-docker.properties               this service, compose only
+       home-crew-config                            shared; merges first
+       docker-compose.yml + .env.example           environment, in
+                                                   home-crew-infrastructure
 
-    $ ./mvnw clean install -fn | tee build.log
+     A value that belongs in home-crew-config and gets hardcoded here works
+     locally and then diverges across twelve services. -->
+
+## Local build output
+
+The full gate, with nothing skipped:
+
+    $ ./mvnw --batch-mode clean verify | tee build.log
 
     [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
     [INFO] BugInstance size is 0
     [INFO] All coverage checks have been met.
     [INFO] BUILD SUCCESS
 
-<!-- Paste the module build summary and the real numbers. `-fn`
-     (--fail-never) means Maven runs every module and reports at the end
-     instead of stopping at the first failure, so BUILD SUCCESS on the last
-     line is not on its own proof that nothing failed - check the summary and
-     the Failures section below. -->
+Errors, if any:
 
-## Failures and warnings
+    $ egrep '\[ERROR\] Failed to execute goal|\[ERROR\] .*\.java|\[ERROR\] com\.homecrew\.|\[ERROR\] Tests run:|Rule violated for bundle' build.log
 
-Pulled out of `build.log` rather than scrolled for:
+<!-- Paste the real summary. No `-DskipTests`, `-Dspotless.check.skip`,
+     `-Dcheckstyle.skip`, `-Dspotbugs.skip` or `-Djacoco.skip` - the point of
+     pasting it is that it is the same gate CI and the pre-push hook run.
 
-    $ egrep '\[ERROR\] com.homecrew|Failed to run task|\[ERROR\] db.migration script error on' build.log
+     If anything is amber rather than red - a flaky test, a suppressed
+     SpotBugs finding, coverage that dropped, a warning you are living with -
+     say so here and say what you decided. A known failure you have reasoned
+     about is reviewable; a silent one is not. -->
 
-<!-- Paste the output. "None" is a real answer and a useful one.
+## Before review
 
-     If anything is red, amber or skipped, say what you decided about it: a
-     flaky test, a suppressed SpotBugs finding, coverage that went down, a
-     warning you are living with. A known failure you have reasoned about is
-     reviewable; a silent one is not. -->
+- [ ] Self review: you read your own diff in the GitHub UI and checked it
+      against the Java and Spring conventions before requesting a review
+- [ ] Tests: unit and integration tests written for the new code, not just
+      passing for the old
+- [ ] Coverage: JaCoCo did not go down. If it went up, `jacoco.min.coverage`
+      was ratcheted to the new baseline floored to the nearest 5%
+- [ ] Build output above is from this branch, with no skip flags
+
+<!-- Re-request review from anyone who left comments once you have addressed
+     them - they are not notified otherwise. -->
 
 ## Impact
 
-<!-- Tick only what applies. Nothing the hooks already enforce is listed here:
-     formatting, Checkstyle, SpotBugs, coverage, secrets, branch name and
-     commit format are all green or this branch could not have been pushed. -->
+<!-- Tick only what applies. Nothing the hooks already enforce is listed
+     here: formatting, Checkstyle, SpotBugs, coverage, secrets, branch name
+     and commit format are all green or this branch could not have been
+     pushed. -->
 
 - [ ] New or changed environment variable - also added to `.env.example` and
       to `docker-compose.yml` in home-crew-infrastructure
@@ -65,8 +84,17 @@ Pulled out of `build.log` rather than scrolled for:
 - [ ] README updated - behaviour, ports or setup changed
 - [ ] None of the above; this is self-contained
 
-## Risk
+## Before merge
 
-<!-- Blast radius. Which services break if this is wrong, what has to land
-     first, and how you would roll it back. "None, additive" is a useful
-     thing for a reviewer to read. -->
+- [ ] Branch is up to date with `dev` and the full gate was re-run
+      after the rebase or merge
+
+<!-- Nothing to do after this merges. A merge to `dev` builds and publishes
+
+         mthanuj/homecrew-config-server:dev
+
+     then dispatches to home-crew-infrastructure, which pulls and restarts
+     the container on the Hetzner dev host automatically.
+
+     A merge to `main` publishes the `:latest` tag and deploys nowhere -
+     there is no production path yet. -->
