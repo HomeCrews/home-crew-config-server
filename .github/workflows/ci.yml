@@ -91,6 +91,9 @@ jobs:
           docker push mthanuj/homecrew-config-server:sha-${GITHUB_SHA::7}
 
       - name: Trigger infrastructure deployment
+        # Only dev deploys. deploy.yml rejects any other tag, and a push
+        # to main publishes :latest with nowhere to send it.
+        if: steps.meta.outputs.tag == 'dev'
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
@@ -109,7 +112,7 @@ jobs:
               "client_payload": {
                 "service": "config-server",
                 "image": "mthanuj/homecrew-config-server",
-                "tag": "dev",
+                "tag": "${{ steps.meta.outputs.tag }}",
                 "sha": "${{ github.sha }}"
               }
             }'
