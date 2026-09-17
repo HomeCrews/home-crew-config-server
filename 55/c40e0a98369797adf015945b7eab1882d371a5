@@ -1,0 +1,20 @@
+src/main/resources/application.properties
+  s_31a1eea127e4f8::t_2b43dd74863588 7-58,62-65
+  s_31a1eea127e4f8::t_7c9a5ec7e8348a 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "55c40e0a98369797adf015945b7eab1882d371a5",
+  "prompts": {},
+  "sessions": {
+    "s_31a1eea127e4f8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6f4f44be-5501-4eca-af87-9e8310efb295",
+        "model": "anthropic.claude-opus-5"
+      },
+      "human_author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
