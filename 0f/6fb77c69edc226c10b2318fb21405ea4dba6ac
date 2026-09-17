@@ -1,0 +1,21 @@
+.github/PULL_REQUEST_TEMPLATE.md
+  s_c32f130532e55b::t_7c6c091bc06094 1-2,13,15-17,19,21,23-26,28-66,70-72
+.gitignore
+  s_c32f130532e55b::t_c5a1a821a59b19 36-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0f6fb77c69edc226c10b2318fb21405ea4dba6ac",
+  "prompts": {},
+  "sessions": {
+    "s_c32f130532e55b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bbba5d29-d2a8-4f09-92f4-84c9690beea7",
+        "model": "anthropic.claude-opus-5"
+      },
+      "human_author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
