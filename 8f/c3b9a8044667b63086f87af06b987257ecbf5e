@@ -1,0 +1,23 @@
+.github/PULL_REQUEST_TEMPLATE.md
+  s_c32f130532e55b::t_24f114f9911400 1,3-5,7-8,10,12,14,16-17,19-23,25-32,39-41,43-45,47-50,52,54-60,62-63,67-70,87-97,99-100
+.github/workflows/ci.yml
+  s_c32f130532e55b::t_0e6d2aee6cdd33 94-96,115
+.gitignore
+  s_c32f130532e55b::t_76c1ffddc7a1ff 38-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8fc3b9a8044667b63086f87af06b987257ecbf5e",
+  "prompts": {},
+  "sessions": {
+    "s_c32f130532e55b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bbba5d29-d2a8-4f09-92f4-84c9690beea7",
+        "model": "anthropic.claude-opus-5"
+      },
+      "human_author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
