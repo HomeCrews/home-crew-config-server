@@ -33,3 +33,8 @@ build/
 .vscode/
 
 .env
+
+# homecrew:standards:meta-ignore:start
+# `./mvnw clean install -fn | tee build.log` - see .github/PULL_REQUEST_TEMPLATE.md
+build.log
+# homecrew:standards:meta-ignore:end
