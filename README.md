@@ -28,6 +28,8 @@ The whole stack, which is the easy way:
     git clone git@github.com:HomeCrews/home-crew-infrastructure.git
     cd home-crew-infrastructure
     cp .env.example .env
+    # then fill in CONFIG_GIT_USERNAME and CONFIG_GIT_TOKEN: home-crew-config
+    # is private, so the clone 401s on the placeholders .env.example ships
     docker compose up -d
 
 Just this service, against a stack that is already up. service-discovery
