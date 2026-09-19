@@ -4,9 +4,9 @@
 # POSIX sh only. No bashisms, no absolute paths, no assumptions about the host
 # OS or package manager: these hooks run on whatever machine has the repo.
 #
-# Structure follows the reference project: each hook composes small single-purpose
-# scripts from .githooks/checks/ rather than inlining everything, so a check
-# can be added, removed or run on its own.
+# Structure: each hook composes small single-purpose scripts from
+# .githooks/checks/ rather than inlining everything, so a check can be
+# added, removed or run on its own.
 
 # ---------------------------------------------------------------- output ----
 
@@ -39,7 +39,7 @@ fail() {
 # Approved rule: dev and main are exempt; every other branch must be
 #   dev__YYYYmmDD__lower_snake_name
 #
-# Note this differs slightly from the the reference project convention
+# Note this differs slightly from the convention it was adapted from
 # (main__YYYYMMDD_<description>, single underscore before the description):
 # HomeCrew uses a double underscore in both positions.
 BRANCH_PATTERN='^(dev|main)$|^dev__[0-9]{8}__[a-z0-9]+(_[a-z0-9]+)*$'
@@ -64,8 +64,8 @@ check_branch_name() {
             "    git branch -m dev__$(date +%Y%m%d)__your_change_here"
     fi
 
-    # A syntactically valid date can still be a typo. Borrowed from
-    # the reference project: only last year, this year and next year are plausible.
+    # A syntactically valid date can still be a typo: only last year, this
+    # year and next year are plausible.
     _date=$(printf '%s' "$_branch" | sed -n 's|^dev__\([0-9]\{8\}\)__.*|\1|p')
     [ -z "$_date" ] && return 0
 
