@@ -6,10 +6,18 @@
 <!--
   HomeCrew Checkstyle ruleset.
 
-  Scope: semantics and conventions ONLY. Spotless + google-java-format (AOSP)
-  owns all whitespace, wrapping, brace placement and import ordering, so every
-  purely cosmetic check is deliberately absent. Adding one back will produce
-  violations that `./mvnw spotless:apply` cannot fix, deadlocking the build.
+  Scope: semantics and conventions first. Spotless + google-java-format
+  (GOOGLE, 2-space, 100-col) owns whitespace, wrapping, brace placement and
+  import ordering, so a cosmetic check is only worth having where it catches a
+  hand-edit that bypassed the pre-commit hook.
+
+  Adding a cosmetic check that google-java-format does NOT already satisfy
+  produces violations `./mvnw spotless:apply` cannot fix, which deadlocks the
+  build. The google_checks block at the end of TreeWalker was verified against
+  every formatted source in this project before being added: zero violations. Two
+  checks were deliberately left out for exactly this reason -
+  MissingJavadocType and MissingJavadocMethod, which no formatter can satisfy
+  and which the reference project suppresses globally for the same reason.
 
   Suppress a specific finding with @SuppressWarnings("checkstyle:CheckName")
   or add a rule to config/checkstyle-suppressions.xml.
@@ -52,7 +60,7 @@
     <module name="NewlineAtEndOfFile"/>
 
     <module name="LineLength">
-        <!-- Matches google-java-format AOSP. -->
+        <!-- Matches google-java-format; GOOGLE and AOSP are both 100. -->
         <property name="max" value="100"/>
         <property name="ignorePattern"
                   value="^package.*|^import.*|^\s*\*.*https?://|@see\s"/>
@@ -136,6 +144,119 @@
                       value="java.lang.Error, java.lang.Throwable"/>
         </module>
         <module name="IllegalThrows"/>
+
+
+        <!-- ===== Style, ported from google_checks.xml =====
+             Taken from the reference project's google_checkstyle.xml so the two
+             projects agree. ONLY the modules that project actually enforces: it
+             suppresses 28 of its 77 globally, including Indentation,
+             AvoidStarImport and LineLength - all three of which are enforced
+             here and are not given up.
+
+             google-java-format already guarantees every one of these; they
+             exist to catch a hand-edit that skipped the pre-commit hook, and
+             were verified to report zero violations against every formatted
+             source in this project.
+
+             MissingJavadocType and MissingJavadocMethod are deliberately NOT
+             here. No formatter can satisfy them, so they would deadlock the
+             build exactly as this file's header warns - that project suppresses both
+             globally for the same reason.
+
+             The trailing SuppressionXpathSingleFilter is not optional:
+             google_checks pairs it with RightCurlyAlone for empty blocks
+             (checkstyle#7541). Without it every `void contextLoads() {}` is a
+             violation that spotless:apply will not fix. -->
+        <module name="IllegalTokenText">
+            <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL" />
+            <property name="format" value="\\u00(09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)" />
+            <property name="message" value="Consider using special escape sequence instead of octal value or Unicode escaped value." />
+        </module>
+        <module name="AvoidEscapedUnicodeCharacters">
+            <property name="allowEscapesForControlCharacters" value="true" />
+            <property name="allowByTailComment" value="true" />
+            <property name="allowNonPrintableEscapes" value="true" />
+        </module>
+        <module name="NoLineWrap">
+            <property name="tokens" value="PACKAGE_DEF, IMPORT, STATIC_IMPORT" />
+        </module>
+        <module name="LeftCurly">
+            <property name="tokens" value="ANNOTATION_DEF, CLASS_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ENUM_DEF,                     INTERFACE_DEF, LAMBDA, LITERAL_CASE, LITERAL_CATCH, LITERAL_DEFAULT,                     LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF,                     LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, METHOD_DEF,                     OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF" />
+        </module>
+        <module name="RightCurly">
+            <property name="id" value="RightCurlySame" />
+            <property name="tokens" value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE,                     LITERAL_DO" />
+        </module>
+        <module name="RightCurly">
+            <property name="id" value="RightCurlyAlone" />
+            <property name="option" value="alone" />
+            <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT,                     INSTANCE_INIT, ANNOTATION_DEF, ENUM_DEF, INTERFACE_DEF, RECORD_DEF,                     COMPACT_CTOR_DEF" />
+        </module>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapDot" />
+            <property name="tokens" value="DOT" />
+            <property name="option" value="nl" />
+        </module>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapComma" />
+            <property name="tokens" value="COMMA" />
+            <property name="option" value="EOL" />
+        </module>
+        <module name="SeparatorWrap">
+            <!-- ELLIPSIS is EOL until https://github.com/google/styleguide/issues/259 -->
+            <property name="id" value="SeparatorWrapEllipsis" />
+            <property name="tokens" value="ELLIPSIS" />
+            <property name="option" value="EOL" />
+        </module>
+        <module name="SeparatorWrap">
+            <!-- ARRAY_DECLARATOR is EOL until https://github.com/google/styleguide/issues/258 -->
+            <property name="id" value="SeparatorWrapArrayDeclarator" />
+            <property name="tokens" value="ARRAY_DECLARATOR" />
+            <property name="option" value="EOL" />
+        </module>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapMethodRef" />
+            <property name="tokens" value="METHOD_REF" />
+            <property name="option" value="nl" />
+        </module>
+        <module name="RecordTypeParameterName">
+            <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)" />
+            <message key="name.invalidPattern" value="Record type name ''{0}'' must match pattern ''{1}''." />
+        </module>
+        <module name="InterfaceTypeParameterName">
+            <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)" />
+            <message key="name.invalidPattern" value="Interface type name ''{0}'' must match pattern ''{1}''." />
+        </module>
+        <module name="GenericWhitespace">
+            <message key="ws.followed" value="GenericWhitespace ''{0}'' is followed by whitespace." />
+            <message key="ws.preceded" value="GenericWhitespace ''{0}'' is preceded with whitespace." />
+            <message key="ws.illegalFollow" value="GenericWhitespace ''{0}'' should followed by whitespace." />
+            <message key="ws.notPreceded" value="GenericWhitespace ''{0}'' is not preceded with whitespace." />
+        </module>
+        <module name="NoWhitespaceBeforeCaseDefaultColon" />
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationMostCases" />
+            <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF,                       RECORD_DEF, COMPACT_CTOR_DEF" />
+        </module>
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationVariables" />
+            <property name="tokens" value="VARIABLE_DEF" />
+            <property name="allowSamelineMultipleAnnotations" value="true" />
+        </module>
+        <module name="RequireEmptyLineBeforeBlockTagGroup" />
+        <module name="JavadocMethod">
+            <property name="accessModifiers" value="public" />
+            <property name="allowMissingParamTags" value="true" />
+            <property name="allowMissingReturnTag" value="true" />
+            <property name="allowedAnnotations" value="Override, Test" />
+            <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF" />
+        </module>
+        <module name="SingleLineJavadoc" />
+        <module name="SuppressionXpathSingleFilter">
+            <!-- suppresion is required till https://github.com/checkstyle/checkstyle/issues/7541 -->
+            <property name="id" value="RightCurlyAlone" />
+            <property name="query" value="//RCURLY[parent::SLIST[count(./*)=1]                                      or preceding-sibling::*[last()][self::LCURLY]]" />
+        </module>
 
         <!-- ===== Design ===== -->
         <module name="FinalClass"/>
