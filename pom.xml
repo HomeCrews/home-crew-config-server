@@ -79,10 +79,8 @@
     <spotbugs.version>4.9.6</spotbugs.version>
     <jacoco.version>0.8.14</jacoco.version>
     <exec-maven-plugin.version>3.5.1</exec-maven-plugin.version>
-
     <!-- Set true to skip pointing git at .githooks during the build. -->
     <hooks.install.skip>false</hooks.install.skip>
-
     <!--
       Minimum line coverage, 0.00-1.00. Starts at zero so the gate can be
       installed before the tests exist; raise it to the measured baseline
@@ -128,7 +126,6 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
       <!-- homecrew:standards:plugins:start -->
-
       <!--
         Points git at .githooks at the start of every build, so a fresh clone
         is protected without anyone remembering a setup step.
@@ -172,7 +169,6 @@
           </execution>
         </executions>
       </plugin>
-
       <!--
         Formatting. google-java-format in AOSP mode: 4-space indent, 100-col.
         Bound to validate so it fails before anything is compiled.
@@ -218,7 +214,6 @@
           </execution>
         </executions>
       </plugin>
-
       <!--
         Conventions and semantics. Cosmetic rules are deliberately absent from
         the ruleset; Spotless owns whitespace. Checkstyle core is pinned
@@ -265,7 +260,6 @@
           </execution>
         </executions>
       </plugin>
-
       <!--
         Static bug detection over compiled bytecode, so it runs at verify.
         Exclusions live in config/spotbugs-exclude.xml and are narrow on
@@ -299,7 +293,6 @@
           </execution>
         </executions>
       </plugin>
-
       <!--
         Coverage. Lombok-generated members are skipped via @lombok.Generated
         (see lombok.config), so the ratio reflects hand-written code only.
