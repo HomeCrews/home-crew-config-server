@@ -1,0 +1,23 @@
+.githooks/common.sh
+  s_8f1ee334861e7f::t_0c0693e9179e2b 7-9,42,67-68
+config/checkstyle.xml
+  s_8f1ee334861e7f::t_99f4c7ce988d3d 17,20,29-30,150-153,158,162-163
+pom.xml
+  s_8f1ee334861e7f::t_d5f76cd38ae368 57-58,71-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7f1285caafcbc602e082d4c8741928403508e435",
+  "prompts": {},
+  "sessions": {
+    "s_8f1ee334861e7f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7b36985b-ae1d-4fa4-a365-e2432c2c80b9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
