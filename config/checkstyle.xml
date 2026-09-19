@@ -14,10 +14,10 @@
   Adding a cosmetic check that google-java-format does NOT already satisfy
   produces violations `./mvnw spotless:apply` cannot fix, which deadlocks the
   build. The google_checks block at the end of TreeWalker was verified against
-  every formatted source in the org before being added: zero violations. Two
+  every formatted source in this project before being added: zero violations. Two
   checks were deliberately left out for exactly this reason -
   MissingJavadocType and MissingJavadocMethod, which no formatter can satisfy
-  and which efm-applexm suppresses globally for the same reason.
+  and which are conventionally suppressed globally for the same reason.
 
   Suppress a specific finding with @SuppressWarnings("checkstyle:CheckName")
   or add a rule to config/checkstyle-suppressions.xml.
@@ -26,8 +26,8 @@
     <property name="severity" value="error"/>
     <!--
       Java only. Scanning .properties files produces phantom FileTabCharacter
-      violations on lines with no tab in them - a trap the efm-applexm project
-      hit and worked around with includeResources=false. Both guards are set.
+      violations on lines with no tab in them. includeResources=false is the
+      documented workaround; both guards are set.
     -->
     <property name="fileExtensions" value="java"/>
     <property name="charset" value="UTF-8"/>
@@ -147,21 +147,20 @@
 
 
         <!-- ===== Style, ported from google_checks.xml =====
-             Taken from efm-applexm's axm_google_checkstyle.xml so the two
-             projects agree. ONLY the modules efm actually enforces: it
-             suppresses 28 of its 77 globally, including Indentation,
-             AvoidStarImport and LineLength - all three of which are enforced
-             here and are not given up.
+             A subset of google_checks.xml rather than the whole file: 28 of
+             its 77 modules are conventionally suppressed, including
+             Indentation, AvoidStarImport and LineLength - all three of which
+             are enforced here and are not given up.
 
              google-java-format already guarantees every one of these; they
              exist to catch a hand-edit that skipped the pre-commit hook, and
              were verified to report zero violations against every formatted
-             source in the org.
+             source in this project.
 
              MissingJavadocType and MissingJavadocMethod are deliberately NOT
              here. No formatter can satisfy them, so they would deadlock the
-             build exactly as this file's header warns - efm suppresses both
-             globally for the same reason.
+             build exactly as this file's header warns, which is why they are
+             conventionally suppressed globally.
 
              The trailing SuppressionXpathSingleFilter is not optional:
              google_checks pairs it with RightCurlyAlone for empty blocks

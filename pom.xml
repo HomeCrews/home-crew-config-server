@@ -54,8 +54,8 @@
     <!--
       Quality-gate tool versions.
 
-      CONFIRMED - these exact versions are in production use in the
-      efm-applexm project and present in the local ~/.m2 cache:
+      CONFIRMED - these exact versions are present in the local ~/.m2 cache
+      and are a known-good set:
         spotless 2.43.0 + google-java-format 1.31.0  (known-good pairing)
         maven-checkstyle-plugin 3.6.0
 
@@ -68,8 +68,8 @@
       Java 25 is the constraint that matters for the unconfirmed set.
       Checkstyle parses source; SpotBugs and JaCoCo parse class files. Too old
       a release fails with "unsupported class file major version" or a parse
-      error rather than anything useful. efm-applexm runs Java 21 and pins
-      jacoco 0.8.11, so its versions are NOT safe to copy here.
+      error rather than anything useful. A Java 21 project would pin jacoco
+      0.8.11, so versions taken from one are NOT safe to copy here.
     -->
     <spotless.version>2.43.0</spotless.version>
     <google-java-format.version>1.31.0</google-java-format.version>

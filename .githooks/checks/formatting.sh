@@ -22,7 +22,6 @@ info "checking formatting with Spotless..."
 
 # Spotless prints the entire offending file on a violation, which buries the
 # useful line. Capture the output and surface only the paths.
-# (Same trick as efm-applexm's pre-commit-check-spotless-formatting.sh.)
 set +e
 output=$("$MVNW" --batch-mode spotless:check 2>&1)
 status=$?
