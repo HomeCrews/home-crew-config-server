@@ -190,8 +190,14 @@
           <java>
             <googleJavaFormat>
               <version>${google-java-format.version}</version>
-              <style>AOSP</style>
-              <reflowLongStrings>true</reflowLongStrings>
+              <style>GOOGLE</style>
+              <!--
+                false is google-java-format's own default and what Spotless
+                assumes. The CLI reflows unless told not to, so leaving this
+                true meant an editor running the binary directly disagreed
+                with the build about every long concatenated string.
+              -->
+              <reflowLongStrings>false</reflowLongStrings>
             </googleJavaFormat>
             <removeUnusedImports/>
             <importOrder>
