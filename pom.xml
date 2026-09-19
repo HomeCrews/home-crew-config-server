@@ -107,6 +107,22 @@
       <artifactId>spring-boot-starter-actuator-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <!--
+        Hot reload for the containerised dev loop: see ./dev up in
+        home-crew-infrastructure. DevTools POLLS the classpath rather than using
+        inotify, which is the only reason it works across a Docker bind mount -
+        inotify events do not cross one on macOS or Windows, so a
+        WatchService-based watcher would see nothing at all.
+
+        optional, and inert in production either way: DevTools disables itself
+        when it detects it is running from a fully packaged jar, which is how
+        every image in this project starts its process.
+      -->
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
   <dependencyManagement>
     <dependencies>
