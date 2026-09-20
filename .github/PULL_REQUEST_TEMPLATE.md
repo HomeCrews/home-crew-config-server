@@ -17,7 +17,7 @@ Closes #
      mistake:
 
        src/main/resources/application.properties   this service only
-       application-docker.properties               this service, compose only
+       application-container.properties               this service, compose only
        home-crew-config                            shared; merges first
        docker-compose.yml + .env.example           environment, in
                                                    home-crew-infrastructure

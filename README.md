@@ -46,9 +46,9 @@ Build and test:
 ## Configuration
 
 `src/main/resources/application.properties` holds the port and the Eureka and
-config-server URLs. The `docker` profile in `application-docker.properties`
+config-server URLs. The `container` profile in `application-container.properties`
 swaps `localhost` for the compose hostnames; docker compose sets
-`SPRING_PROFILES_ACTIVE=docker`.
+`SPRING_PROFILES_ACTIVE=container`.
 
 Anything shared with other services belongs in
 [home-crew-config](https://github.com/HomeCrews/home-crew-config), not here.
