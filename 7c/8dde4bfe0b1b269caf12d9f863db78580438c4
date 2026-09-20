@@ -1,0 +1,19 @@
+src/main/resources/application.properties
+  s_7d2d84d760d8c4::t_c0cef0e4a3e226 87-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7c8dde4bfe0b1b269caf12d9f863db78580438c4",
+  "prompts": {},
+  "sessions": {
+    "s_7d2d84d760d8c4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4cc863e8-cf29-4700-bf96-2866f5acdbd2",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
