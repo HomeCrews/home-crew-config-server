@@ -101,6 +101,17 @@
       <artifactId>spring-cloud-config-server</artifactId>
     </dependency>
     <dependency>
+      <!--
+        Basic auth in front of the config and encryption endpoints. Needed only
+        since this server started decrypting {cipher} values: before that it
+        served placeholders and a leak cost nothing. NOT needed for the
+        encryption itself - spring-security-crypto already arrives with
+        spring-cloud-config-server.
+      -->
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
     </dependency>

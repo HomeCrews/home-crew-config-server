@@ -65,6 +65,68 @@ CI then fires a `repository_dispatch` at home-crew-infrastructure, which pulls
 the new image and restarts the container on the Hetzner dev host. There are no
 releases and no version tags.
 
+## Security
+
+Port 8888 requires HTTP basic (`configclient` / `CONFIG_CLIENT_PASSWORD`).
+That is new, and it is not optional: this server decrypts `{cipher}` values
+before serving them, and it exposes `/encrypt`, `/decrypt` and `/key`. An open
+`/decrypt` hands every secret in home-crew-config to anyone who can reach the
+port, and 8888 is published on `0.0.0.0`.
+
+**`/actuator/health` is the one exception, deliberately.** `docker-compose.yml`
+health-checks it with an unauthenticated `curl`, and ten services sit behind
+`depends_on: config-server: condition: service_healthy`. Behind auth that curl
+is a 401, the container never reports healthy, and the whole stack fails to
+start with a cause that looks nothing like a security setting. See
+`SecurityConfig`. Health details are `when-authorized`, so an anonymous caller
+gets a bare `{"status":"UP"}` and not the git URI.
+
+Still exposed, and accepted for now: basic auth travels over plain HTTP on a
+published port. The upgrade path is TLS plus unpublishing 8888 so only the
+compose network reaches it.
+
+## Encryption
+
+`ENCRYPT_KEY` is a symmetric key. Generate one and keep it somewhere
+recoverable - losing it means re-encrypting every value in home-crew-config:
+
+    openssl rand -base64 48
+
+No new dependency was needed for this: a symmetric key goes through
+`EncryptionBootstrapConfiguration$VanillaEncryptionConfiguration`, and
+`spring-security-crypto` already arrives with `spring-cloud-config-server`.
+`spring-security-rsa` is only for the keystore path.
+
+Encrypt a value:
+
+    curl -sS -u configclient:"$CONFIG_CLIENT_PASSWORD" \
+         -H 'Content-Type: text/plain' \
+         --data-binary 'the-actual-secret' \
+         http://localhost:8888/encrypt
+
+Both flags matter. With `curl -d` the body is form-encoded and the server
+URL-decodes it, turns `+` into a space and strips a trailing `=` - you would
+encrypt a value that is not the one you typed.
+
+Two failure modes worth knowing:
+
+- **A wrong key is silent.** `CipherEnvironmentEncryptor` does not throw; it
+  renames the property to `invalid.<key>`, so the client receives no property
+  rather than a wrong one, and the only trace is one WARN here.
+  `encrypt.fail-on-error` does **not** guard this - it lives on `KeyProperties`
+  in spring-cloud-context and is read by the client-side decryptor. Sweep for
+  `invalid.` keys after any key change.
+- **`encrypt.salt` must never change.** It is a fixed literal in
+  `application.properties`, not an environment variable, for exactly that
+  reason: changing it makes every existing ciphertext undecryptable, and per
+  the point above the symptom is a renamed property, not an error.
+
+`RequiredSecrets` exists because of the first one. It reads `encrypt.key` and
+the basic-auth password with `@Value` - which throws on an unresolvable
+placeholder, unlike the `@ConfigurationProperties` binding that normally reads
+them - and round-trips the encryptor at startup. A missing or broken key is a
+container that will not start, rather than a stack that serves nothing.
+
 ## Quality gates
 
 The same blocking gates run in every HomeCrew repository. They run locally at
