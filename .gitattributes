@@ -1,18 +1,18 @@
 /mvnw text eol=lf
-*.cmd text eol=crlf
 
-# homecrew:standards:gitattributes:start
-# Git hooks MUST be checked out with LF endings. On Windows, core.autocrlf
-# would otherwise write CRLF, and the shell fails to parse the shebang with
-# "bad interpreter: /bin/sh^M" - which reads as the hook being missing rather
-# than mangled. This single rule is what makes the hooks work on Windows.
 .githooks/** text eol=lf
 *.sh        text eol=lf
 
-# Normalise text in the repo, let git decide what is binary.
-*           text=auto
+.editorconfig text eol=lf
+*.java        text eol=lf
+*.xml         text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.properties  text eol=lf
+*.json        text eol=lf
+*.md          text eol=lf
 
-# Windows batch files genuinely need CRLF.
-*.cmd       text eol=crlf
-*.bat       text eol=crlf
-# homecrew:standards:gitattributes:end
+* text=auto
+
+*.cmd text eol=crlf
+*.bat text eol=crlf
