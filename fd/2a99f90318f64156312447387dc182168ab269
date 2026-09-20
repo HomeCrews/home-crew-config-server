@@ -1,0 +1,35 @@
+src/test/resources/application.properties
+  s_8f1ee334861e7f::t_c901279e7ca8b0 20,28
+  s_8f1ee334861e7f::t_151b0b1e2f8c0c 21-27,29-32
+README.md
+  s_8f1ee334861e7f::t_7adb4b3fa70859 68-129
+src/main/java/com/homecrew/configserver/config/RequiredSecrets.java
+  s_8f1ee334861e7f::t_4dd3074845b4ce 5,30-35
+  s_8f1ee334861e7f::t_8128226b640da9 1-4,6-15,20-29,36-67
+  s_8f1ee334861e7f::t_151b0b1e2f8c0c 16-19
+src/main/resources/application.properties
+  s_8f1ee334861e7f::t_b51c0684757eda 7-26,33,35,39
+  s_8f1ee334861e7f::t_e3a2c346489ef3 27-32,34,36-38,40-42,112-118,120-125
+src/main/java/com/homecrew/configserver/config/SecurityConfig.java
+  s_8f1ee334861e7f::t_16980e646bf71b 11-14
+  s_8f1ee334861e7f::t_7d8dece7c3099b 1-10,15-49
+pom.xml
+  s_8f1ee334861e7f::t_c901279e7ca8b0 104-113
+  s_8f1ee334861e7f::t_383f4211d8bffb 103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fd2a99f90318f64156312447387dc182168ab269",
+  "prompts": {},
+  "sessions": {
+    "s_8f1ee334861e7f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7b36985b-ae1d-4fa4-a365-e2432c2c80b9",
+        "model": "anthropic.claude-opus-5"
+      },
+      "human_author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
