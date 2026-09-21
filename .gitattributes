@@ -1,8 +1,17 @@
 /mvnw text eol=lf
 
+# homecrew:standards:gitattributes:start
+# Git hooks MUST be checked out with LF endings. On Windows, core.autocrlf
+# would otherwise write CRLF, and the shell fails to parse the shebang with
+# "bad interpreter: /bin/sh^M" - which reads as the hook being missing rather
+# than mangled. This single rule is what makes the hooks work on Windows.
 .githooks/** text eol=lf
-*.sh        text eol=lf
+*.sh         text eol=lf
 
+# Spotless normalises every file it owns to LF (<lineEndings>UNIX</lineEndings>
+# in pom-plugins.xml). Without these rules, core.autocrlf on Windows checks the
+# same files out as CRLF and spotless:check fails on a clean clone - before a
+# single edit. Keep this list in step with the Spotless <includes>.
 .editorconfig text eol=lf
 *.java        text eol=lf
 *.xml         text eol=lf
@@ -12,7 +21,10 @@
 *.json        text eol=lf
 *.md          text eol=lf
 
-* text=auto
+# Normalise text in the repo, let git decide what is binary.
+*            text=auto
 
-*.cmd text eol=crlf
-*.bat text eol=crlf
+# Windows batch files genuinely need CRLF.
+*.cmd        text eol=crlf
+*.bat        text eol=crlf
+# homecrew:standards:gitattributes:end

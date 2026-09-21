@@ -58,7 +58,7 @@
 
       CONFIRMED - these exact versions are present in the local ~/.m2 cache
       and are a known-good set:
-        spotless 2.43.0 + google-java-format 1.31.0  (known-good pairing)
+        spotless 2.43.0
         maven-checkstyle-plugin 3.6.0
 
       UNCONFIRMED - pinned from memory and NOT yet verified against Maven
@@ -72,9 +72,14 @@
       a release fails with "unsupported class file major version" or a parse
       error rather than anything useful. A Java 21 project would pin jacoco
       0.8.11, so versions taken from one are NOT safe to copy here.
+
+      There is deliberately NO property for the Java formatter. Spotless's
+      <eclipse> step resolves Eclipse JDT from the p2 site at
+      download.eclipse.org rather than Maven Central, so resolve-versions.sh
+      cannot check it and a version pinned here would be misleading. See the
+      comment on the step itself in pom-plugins.xml.
     -->
     <spotless.version>2.43.0</spotless.version>
-    <google-java-format.version>1.31.0</google-java-format.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <checkstyle.version>11.0.1</checkstyle.version>
     <spotbugs-maven-plugin.version>4.9.6.0</spotbugs-maven-plugin.version>
@@ -203,8 +208,8 @@
       </plugin>
 
       <!--
-        Formatting. google-java-format in AOSP mode: 4-space indent, 100-col.
-        Bound to validate so it fails before anything is compiled.
+        Formatting. Google style: 2-space indent, 100-col. Bound to validate so
+        it fails before anything is compiled.
 
         Declaration order matters: Spotless and Checkstyle both bind to
         validate, and Maven runs same-phase plugins in the order they are
@@ -216,26 +221,51 @@
         <artifactId>spotless-maven-plugin</artifactId>
         <version>${spotless.version}</version>
         <configuration>
+          <!--
+            Pin LF rather than inheriting the platform. Without this, a Windows
+            checkout formats to CRLF and every file reads as a violation. The
+            eol=lf rules in .gitattributes are the other half of the same fix.
+          -->
           <lineEndings>UNIX</lineEndings>
           <java>
-            <googleJavaFormat>
-              <version>${google-java-format.version}</version>
-              <style>GOOGLE</style>
-              <!--
-                false is google-java-format's own default and what Spotless
-                assumes. The CLI reflows unless told not to, so leaving this
-                true meant an editor running the binary directly disagreed
-                with the build about every long concatenated string.
-              -->
-              <reflowLongStrings>false</reflowLongStrings>
-            </googleJavaFormat>
-            <removeUnusedImports />
+            <!--
+              The Eclipse formatter, not google-java-format, and the reason is
+              the editor rather than the output.
+
+              google-java-format has no VS Code integration, so format-on-save
+              runs Eclipse JDT instead and the two disagree on wrapping. Every
+              save reintroduced a violation. Pointing BOTH at one profile - the
+              build here, the editor via java.format.settings.url in
+              .vscode/settings.json - means saving produces bytes that
+              spotless:check already accepts. config/eclipse-formatter.xml is
+              Google Java Style, so the style itself is unchanged.
+
+              Cost, so nobody is surprised by it: this step resolves Eclipse JDT
+              from the p2 site at https://download.eclipse.org, NOT from Maven
+              Central. A cold build needs to reach it. The version is an Eclipse
+              PLATFORM release (4.x), not an artifact version - do not try to
+              look it up on Central, and note spotless-eclipse-jdt on Central is
+              a dead 2021 artifact that this does not use.
+
+              <version> is deliberately omitted so Spotless picks the release it
+              ships support for. Pin it here once a build has confirmed which
+              one that is.
+            -->
+            <eclipse>
+              <file>${project.basedir}/config/eclipse-formatter.xml</file>
+            </eclipse>
+            <removeUnusedImports/>
             <importOrder>
               <order>java,javax,jakarta,org,com,</order>
             </importOrder>
-            <formatAnnotations />
-            <trimTrailingWhitespace />
-            <endWithNewline />
+            <!--
+              No formatAnnotations here. It is a google-java-format fixup, and
+              the editor has no equivalent, so it would reintroduce exactly the
+              build-disagrees-with-save problem this change exists to remove.
+              Annotation placement comes from the profile instead.
+            -->
+            <trimTrailingWhitespace/>
+            <endWithNewline/>
           </java>
 
           <!--
@@ -286,8 +316,8 @@
                 <exclude>**/*.cmd</exclude>
                 <exclude>.mvn/wrapper/**</exclude>
               </excludes>
-              <trimTrailingWhitespace />
-              <endWithNewline />
+              <trimTrailingWhitespace/>
+              <endWithNewline/>
             </format>
 
             <!--
@@ -308,7 +338,7 @@
               <excludes>
                 <exclude>target/**</exclude>
               </excludes>
-              <endWithNewline />
+              <endWithNewline/>
             </format>
           </formats>
         </configuration>

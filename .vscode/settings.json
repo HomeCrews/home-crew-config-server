@@ -1,0 +1,38 @@
+{
+  // Committed deliberately. The point of this file is that formatting does not
+  // depend on what any one person has in their own VS Code settings - a fresh
+  // clone on a new machine formats the same way the build does.
+  //
+  // Java: format with the SAME Eclipse profile Spotless enforces, so
+  // format-on-save produces bytes spotless:check already agrees with. Both
+  // sides load config/eclipse-formatter.xml; the profile name must match the
+  // one declared inside it.
+  "java.format.settings.url": "config/eclipse-formatter.xml",
+  "java.format.settings.profile": "GoogleStyle",
+
+  // Must stay in step with <importOrder> in pom.xml. Organize-imports on save
+  // is what keeps removeUnusedImports and importOrder from failing the build.
+  "java.completion.importOrder": ["java", "javax", "jakarta", "org", "com"],
+
+  "editor.formatOnSave": true,
+  "[java]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+
+  // These duplicate .editorconfig on purpose. VS Code does not read
+  // .editorconfig without the EditorConfig extension, and Spotless enforces
+  // trimTrailingWhitespace/endWithNewline on yml, xml, properties, sh and
+  // Dockerfile whether or not that extension happens to be installed.
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // Markdown is the one carve-out, matching .editorconfig and the Spotless
+  // <formats> block: two trailing spaces are a hard line break, so stripping
+  // them silently changes rendered output.
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  }
+}

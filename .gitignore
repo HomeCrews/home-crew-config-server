@@ -30,7 +30,10 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+# settings.json is checked in on purpose: it pins the Java formatter to the
+# same profile Spotless enforces. Everything else under .vscode/ is personal.
+.vscode/*
+!.vscode/settings.json
 
 .env
 

@@ -1,3 +1,12 @@
+# EditorConfig - https://editorconfig.org
+# Mirrors the Spotless Java style (Google, 2-space, 100-col) so editors and the
+# build agree. Spotless is the source of truth; this file only stops editors
+# from fighting it while you type.
+#
+# The Java values here MUST track config/eclipse-formatter.xml. An editor that
+# reads this file maps it onto its own formatter, so a disagreement here means
+# format-on-save reintroduces a Spotless violation on every single save.
+
 root = true
 
 [*]
@@ -9,7 +18,8 @@ indent_style = space
 indent_size = 4
 
 [*.java]
-indent_size = 4
+# 2, not 4: Spotless enforces Google style. See _standards/README.md.
+indent_size = 2
 max_line_length = 100
 
 [*.{xml,yml,yaml,json}]
@@ -19,10 +29,12 @@ indent_size = 2
 indent_size = 2
 
 [*.md]
+# Trailing double-space is a hard line break in Markdown.
 trim_trailing_whitespace = false
 
 [Makefile]
 indent_style = tab
 
 [*.cmd]
+# Matches .gitattributes: Windows scripts keep CRLF.
 end_of_line = crlf

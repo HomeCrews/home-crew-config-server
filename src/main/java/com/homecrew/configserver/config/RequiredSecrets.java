@@ -7,23 +7,27 @@ import org.springframework.stereotype.Component;
 /**
  * Refuses to start when a no-default secret was not supplied, or was supplied and does not work.
  *
- * <p>This class exists because the two properties it checks fail <em>silently</em> in two different
+ * <p>
+ * This class exists because the two properties it checks fail <em>silently</em> in two different
  * ways, and both failures look like the feature was never switched on.
  *
- * <p><strong>The placeholder never resolves.</strong> {@code encrypt.key} is bound by {@code
+ * <p>
+ * <strong>The placeholder never resolves.</strong> {@code encrypt.key} is bound by {@code
  * KeyProperties} and {@code spring.security.user.password} by {@code SecurityProperties.User}, both
  * {@code @ConfigurationProperties}. That binding ignores an unresolvable placeholder, so with
- * {@code ENCRYPT_KEY} unset the key becomes the literal fourteen-character string {@code $}{@code
- * {ENCRYPT_KEY}}, {@code EncryptorFactory} builds a perfectly valid AES encryptor out of it, and
- * nothing complains. It is the same trap that put a literal {@code $}{@code {JWT_SECRET}} into a
- * running service and prompted this migration.
+ * {@code ENCRYPT_KEY} unset the key becomes the literal fourteen-character string
+ * {@code $}{@code {ENCRYPT_KEY}}, {@code EncryptorFactory} builds a perfectly valid AES encryptor
+ * out of it, and nothing complains. It is the same trap that put a literal
+ * {@code $}{@code {JWT_SECRET}} into a running service and prompted this migration.
  *
- * <p><strong>A wrong key does not throw.</strong> {@code CipherEnvironmentEncryptor} catches the
+ * <p>
+ * <strong>A wrong key does not throw.</strong> {@code CipherEnvironmentEncryptor} catches the
  * failure and renames the property to {@code invalid.<key>} instead, so the client receives no
  * property at all rather than a wrong one. {@code encrypt.fail-on-error} does not help: it is read
  * by the client-side {@code AbstractEnvironmentDecrypt}, not by this server.
  *
- * <p>{@code @Value} is the fix. It resolves through {@code PropertySourcesPlaceholderConfigurer},
+ * <p>
+ * {@code @Value} is the fix. It resolves through {@code PropertySourcesPlaceholderConfigurer},
  * which does not ignore unresolvable placeholders — so the same property that binds leniently above
  * throws here, at startup, before anything can serve a broken secret.
  */
@@ -34,8 +38,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RequiredSecrets {
 
-  RequiredSecrets(
-      @Value("${encrypt.key}") String encryptKey,
+  RequiredSecrets(@Value("${encrypt.key}") String encryptKey,
       @Value("${spring.security.user.password}") String basicAuthPassword,
       TextEncryptor textEncryptor) {
 

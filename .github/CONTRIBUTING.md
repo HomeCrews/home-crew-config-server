@@ -103,7 +103,7 @@ The gates themselves:
 
 | Gate | Tool | Phase | Blocking |
 |---|---|---|---|
-| Formatting | Spotless + google-java-format | `validate` | yes |
+| Formatting | Spotless + Eclipse JDT (Google Java Style) | `validate` | yes |
 | Conventions | Checkstyle | `validate` | yes |
 | Static analysis | SpotBugs | `verify` | yes |
 | Coverage | JaCoCo | `verify` | yes, at `jacoco.min.coverage` |

@@ -134,7 +134,7 @@ commit and push time rather than being discovered in CI.
 
 | Gate | Tool | Runs at |
 |---|---|---|
-| Formatting | Spotless + google-java-format, AOSP, 4-space, 100-col | `validate` |
+| Formatting | Spotless + Eclipse JDT, Google Java Style, 2-space, 100-col | `validate` |
 | Conventions | Checkstyle | `validate` |
 | Static analysis | SpotBugs | `verify` |
 | Coverage | JaCoCo, floor at `jacoco.min.coverage` | `verify` |

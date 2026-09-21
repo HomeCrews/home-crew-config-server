@@ -6,12 +6,12 @@
 <!--
   HomeCrew Checkstyle ruleset.
 
-  Scope: semantics and conventions first. Spotless + google-java-format
-  (GOOGLE, 2-space, 100-col) owns whitespace, wrapping, brace placement and
-  import ordering, so a cosmetic check is only worth having where it catches a
-  hand-edit that bypassed the pre-commit hook.
+  Scope: semantics and conventions first. Spotless + the Eclipse JDT formatter
+  (Google Java Style, 2-space, 100-col) owns whitespace, wrapping, brace
+  placement and import ordering, so a cosmetic check is only worth having where
+  it catches a hand-edit that bypassed the pre-commit hook.
 
-  Adding a cosmetic check that google-java-format does NOT already satisfy
+  Adding a cosmetic check that the formatter does NOT already satisfy
   produces violations `./mvnw spotless:apply` cannot fix, which deadlocks the
   build. The google_checks block at the end of TreeWalker was verified against
   every formatted source in this project before being added: zero violations. Two
@@ -60,7 +60,7 @@
     <module name="NewlineAtEndOfFile"/>
 
     <module name="LineLength">
-        <!-- Matches google-java-format; GOOGLE and AOSP are both 100. -->
+        <!-- Matches lineSplit in config/eclipse-formatter.xml. -->
         <property name="max" value="100"/>
         <property name="ignorePattern"
                   value="^package.*|^import.*|^\s*\*.*https?://|@see\s"/>
@@ -149,10 +149,11 @@
         <!-- ===== Style, ported from google_checks.xml =====
              A subset of google_checks.xml rather than the whole file: 28 of
              its 77 modules are conventionally suppressed, including
-             Indentation, AvoidStarImport and LineLength - all three of which
-             are enforced here and are not given up.
+             AvoidStarImport and LineLength - both of which are enforced here
+             and are not given up. Indentation is NOT among them and is not
+             checked here; Spotless owns indentation outright.
 
-             google-java-format already guarantees every one of these; they
+             The Spotless profile already guarantees every one of these; they
              exist to catch a hand-edit that skipped the pre-commit hook, and
              were verified to report zero violations against every formatted
              source in this project.
