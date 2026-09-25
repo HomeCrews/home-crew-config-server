@@ -1,0 +1,14 @@
+pom.xml
+  h_bfc075b6e02f74 353-362,364
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "171e2d38081cc4e4729586876a3a0b98e0d9b57b",
+  "prompts": {},
+  "humans": {
+    "h_bfc075b6e02f74": {
+      "author": "mThanuj <mullagurithanuj0@gmail.com>"
+    }
+  }
+}
