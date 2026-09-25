@@ -177,6 +177,12 @@
         on PATH on Windows outside Git Bash, whereas git necessarily is if you
         are building from a clone. Exit 128 (not a git work tree - a source
         tarball, say) is treated as success so it can never fail a build.
+
+        <?m2e ignore?> keeps the IDE's embedded Maven (m2e, which the VS Code
+        Java extension runs on every workspace build) from executing it: it
+        is a one-off setup step, and without an instruction m2e flags every
+        unmapped execution as "not covered by lifecycle configuration". The
+        command line ignores the instruction entirely.
       -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -184,6 +190,7 @@
         <version>${exec-maven-plugin.version}</version>
         <executions>
           <execution>
+            <?m2e ignore?>
             <id>install-git-hooks</id>
             <phase>validate</phase>
             <goals>
@@ -390,7 +397,10 @@
           <linkXRef>false</linkXRef>
         </configuration>
         <executions>
+          <!-- Ignored by m2e for the same reason as install-git-hooks; the
+               pre-push hook and the command-line build still run it. -->
           <execution>
+            <?m2e ignore?>
             <id>checkstyle-validate</id>
             <phase>validate</phase>
             <goals>
