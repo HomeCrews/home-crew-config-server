@@ -350,7 +350,18 @@
           </formats>
         </configuration>
         <executions>
+          <!--
+            Ignored by m2e. The VS Code Java extension runs its language server
+            with Lombok's agent attached, and the agent patches Eclipse JDT's
+            DefaultCodeFormatter in every classloader - including the isolated
+            one Spotless loads JDT into. The patched class then references
+            lombok.patcher.Symbols, which that classloader cannot see, and the
+            IDE build fails with NoClassDefFoundError. Format-on-save already
+            applies the same profile; the hooks and the command-line build still
+            run this check.
+          -->
           <execution>
+            <?m2e ignore?>
             <id>spotless-check</id>
             <phase>validate</phase>
             <goals>
